@@ -13,7 +13,7 @@
     <artifactId>wrapper-java</artifactId>
 
     <properties>
-        <jextract/>
+        <jextract.cache.basedir>${project.basedir}/jextract/.cache</jextract.cache.basedir>
         <java.generatedSources>${project.build.directory}/generated-sources/java</java.generatedSources>
         <resources.generatedSources>${project.build.directory}/generated-sources/resources</resources.generatedSources>
         <out.library>${resources.generatedSources}/io/github/kkriske/library/native</out.library>
@@ -33,6 +33,17 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${jextract.cache.basedir}</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -111,7 +122,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <executable>${jextract}</executable>
+                    <executable>${jextract.executable}</executable>
                     <arguments>
                         <argument>--include-dir</argument>
                         <argument>${out.library}</argument>
@@ -137,7 +148,9 @@
                 </os>
             </activation>
             <properties>
-                <jextract>${project.basedir}\..\jextract\bin\jextract.bat</jextract>
+                <jextract.archive>${project.basedir}/jextract/openjdk-22-jextract+6-47_windows-x64_bin.tar.gz</jextract.archive>
+                <jextract.cache>${jextract.cache.basedir}/openjdk-22-jextract+6-47_windows-x64_bin</jextract.cache>
+                <jextract.executable>${jextract.cache}/jextract-22/bin/jextract.bat</jextract.executable>
             </properties>
         </profile>
         <profile>
@@ -148,8 +161,41 @@
                 </os>
             </activation>
             <properties>
-                <jextract>${project.basedir}/../jextract/bin/jextract</jextract>
+                <jextract.archive>${project.basedir}/jextract/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz</jextract.archive>
+                <jextract.cache>${jextract.cache.basedir}/openjdk-22-jextract+6-47_linux-x64_bin</jextract.cache>
+                <jextract.executable>${jextract.cache}/jextract-22/bin/jextract</jextract.executable>
             </properties>
+        </profile>
+        <profile>
+            <id>unpack-jextract</id>
+            <activation>
+                <file>
+                    <missing>${jextract.cache}</missing>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>unpack-jextract</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <untar compression="gzip" src="${jextract.archive}" dest="${jextract.cache}"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 </project>
