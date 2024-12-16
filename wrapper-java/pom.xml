@@ -189,6 +189,7 @@
                                 <configuration>
                                     <target>
                                         <untar compression="gzip" src="${jextract.archive}" dest="${jextract.cache}"/>
+                                        <chmod file="${jextract.executable}" perm="700"/>
                                     </target>
                                 </configuration>
                             </execution>
