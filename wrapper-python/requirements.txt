@@ -1,0 +1,6 @@
+# prod deps
+cffi==1.17.1
+# dev deps
+
+# test deps
+pytest==8.3.4

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.kkriske</groupId>
+        <artifactId>native-library-api</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>wrapper-python</artifactId>
+
+    <properties>
+        <python.executable>${env.PYTHON_HOME}/python</python.executable>
+        <python.sourceDirectory>src/main/python</python.sourceDirectory>
+        <resources.generatedSources>${project.build.directory}/generated-sources/resources</resources.generatedSources>
+        <python.testSourceDirectory>src/test/python</python.testSourceDirectory>
+        <venv.dir>${project.basedir}/.venv</venv.dir>
+        <venv.activate>${venv.dir}/Scripts/activate</venv.activate>
+        <venv.python>${venv.dir}/Scripts/python</venv.python>
+        <venv.pip>${venv.dir}/Scripts/pip</venv.pip>
+        <venv.pytest>${venv.dir}/Scripts/pytest</venv.pytest>
+    </properties>
+
+    <build>
+<!--        <sourceDirectory>${python.sourceDirectory}</sourceDirectory>-->
+<!--        <testSourceDirectory>${python.testSourceDirectory}</testSourceDirectory>-->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${venv.dir}</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!-- disable java compilation -->
+                    <skipMain>true</skipMain>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-library</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>library</artifactId>
+                                    <version>${revision}</version>
+                                    <type>jar</type>
+                                    <includes>io/github/kkriske/library/native/*</includes>
+                                    <outputDirectory>${resources.generatedSources}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>pytest</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <configuration>
+<!--                            <environmentVariables>-->
+<!--                                <PYTHONPATH>${python.sourceDirectory}</PYTHONPATH>-->
+<!--                            </environmentVariables>-->
+                            <workingDirectory>${python.testSourceDirectory}</workingDirectory>
+                            <environmentScript>${venv.activate}</environmentScript>
+                            <executable>${venv.pytest}</executable>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>prepare-venv</id>
+            <activation>
+                <!--
+                This is not fully functional.
+                Running clean combined with other goals does not trigger this profile, since activations
+                are evaluated before anything is executed. So the condition already evaluates to false before the
+                venv dir is removed by the clean goal.
+                Fixed in Maven 4 as it supports activation based on simple scripts: https://issues.apache.org/jira/browse/MNG-8286
+                -->
+                <file>
+                    <missing>${venv.dir}</missing>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <!-- create a venv local to the module -->
+                            <execution>
+                                <id>setup-venv</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>initialize</phase>
+                                <configuration>
+                                    <executable>${python.executable}</executable>
+                                    <arguments>
+                                        <argument>-m</argument>
+                                        <argument>venv</argument>
+                                        <argument>${venv.dir}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <!-- install requirements.txt into the venv -->
+                            <execution>
+                                <id>install-packages</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>initialize</phase>
+                                <configuration>
+                                    <environmentScript>${venv.activate}</environmentScript>
+                                    <executable>${venv.pip}</executable>
+                                    <arguments>
+                                        <argument>install</argument>
+                                        <argument>-r</argument>
+                                        <argument>requirements.txt</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
