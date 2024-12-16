@@ -24,7 +24,5 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - name: Set PYTHON_HOME
-        run: echo "PYTHON_HOME=${{ steps.setup_python.outputs.python-path }}" >> $GITHUB_ENV
       - name: Build
-        run: mvn -V -B package
+        run: mvn -V -B -Dpython.executable="${{ steps.setup_python.outputs.python-path }}" package
