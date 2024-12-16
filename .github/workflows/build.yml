@@ -25,4 +25,4 @@ jobs:
         with:
           python-version: '3.13'
       - name: Build
-        run: mvn -V -B -Dpython.executable="${{ steps.setup_python.outputs.python-path }}" package
+        run: mvn -V -B -D"python.executable=${{ steps.setup_python.outputs.python-path }}" package

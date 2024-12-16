@@ -148,7 +148,7 @@
                 </os>
             </activation>
             <properties>
-                <jexstract>${project.basedir}/../jextract/bin/jextract</jexstract>
+                <jextract>${project.basedir}/../jextract/bin/jextract</jextract>
             </properties>
         </profile>
     </profiles>
