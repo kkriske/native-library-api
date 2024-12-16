@@ -6,6 +6,7 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
@@ -26,4 +27,4 @@ jobs:
       - name: Set PYTHON_HOME
         run: echo "PYTHON_HOME=${{ steps.setup_python.outputs.python-path }}" >> $GITHUB_ENV
       - name: Build
-        run: mvn package
+        run: mvn -V -U package
