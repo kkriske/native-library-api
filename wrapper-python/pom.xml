@@ -18,10 +18,11 @@
         <resources.generatedSources>${project.build.directory}/generated-sources/resources</resources.generatedSources>
         <python.testSourceDirectory>src/test/python</python.testSourceDirectory>
         <venv.dir>${project.basedir}/.venv</venv.dir>
-        <venv.activate>${venv.dir}/Scripts/activate</venv.activate>
-        <venv.python>${venv.dir}/Scripts/python</venv.python>
-        <venv.pip>${venv.dir}/Scripts/pip</venv.pip>
-        <venv.pytest>${venv.dir}/Scripts/pytest</venv.pytest>
+        <venv.bin/><!-- differs per OS, set in profiles -->
+        <venv.activate>${venv.bin}/activate</venv.activate>
+        <venv.python>${venv.bin}/python</venv.python>
+        <venv.pip>${venv.bin}/pip</venv.pip>
+        <venv.pytest>${venv.bin}/pytest</venv.pytest>
     </properties>
 
     <build>
@@ -96,6 +97,28 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <venv.bin>${venv.dir}/Scripts</venv.bin>
+            </properties>
+        </profile>
+        <profile>
+            <id>unix</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <venv.bin>${venv.dir}/bin</venv.bin>
+            </properties>
+        </profile>
         <profile>
             <id>prepare-venv</id>
             <activation>
