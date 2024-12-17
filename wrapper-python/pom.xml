@@ -85,9 +85,6 @@
                         </goals>
                         <phase>test</phase>
                         <configuration>
-<!--                            <environmentVariables>-->
-<!--                                <PYTHONPATH>${python.sourceDirectory}</PYTHONPATH>-->
-<!--                            </environmentVariables>-->
                             <workingDirectory>${python.testSourceDirectory}</workingDirectory>
                             <environmentScript>${venv.activate}</environmentScript>
                             <executable>${venv.pytest}</executable>

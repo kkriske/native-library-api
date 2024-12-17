@@ -150,7 +150,7 @@
             <properties>
                 <jextract.archive>${project.basedir}/jextract/openjdk-22-jextract+6-47_windows-x64_bin.tar.gz</jextract.archive>
                 <jextract.cache>${jextract.cache.basedir}/openjdk-22-jextract+6-47_windows-x64_bin</jextract.cache>
-                <jextract.executable>${jextract.cache}/jextract-22/bin/jextract.bat</jextract.executable>
+                <jextract.executable>${jextract.cache}/bin/jextract.bat</jextract.executable>
             </properties>
         </profile>
         <profile>
@@ -163,11 +163,18 @@
             <properties>
                 <jextract.archive>${project.basedir}/jextract/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz</jextract.archive>
                 <jextract.cache>${jextract.cache.basedir}/openjdk-22-jextract+6-47_linux-x64_bin</jextract.cache>
-                <jextract.executable>${jextract.cache}/jextract-22/bin/jextract</jextract.executable>
+                <jextract.executable>${jextract.cache}/bin/jextract</jextract.executable>
             </properties>
         </profile>
         <profile>
             <id>unpack-jextract</id>
+            <!--
+            This is not fully functional.
+            Running clean combined with other goals does not trigger this profile, since activations
+            are evaluated before anything is executed. So the condition already evaluates to false before the
+            venv dir is removed by the clean goal.
+            Fixed in Maven 4 as it supports activation based on simple scripts: https://issues.apache.org/jira/browse/MNG-8286
+            -->
             <activation>
                 <file>
                     <missing>${jextract.cache}</missing>
@@ -176,21 +183,23 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
                         <executions>
                             <execution>
                                 <id>unpack-jextract</id>
                                 <phase>initialize</phase>
                                 <goals>
-                                    <goal>run</goal>
+                                    <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <target>
-                                        <untar compression="gzip" src="${jextract.archive}" dest="${jextract.cache}"/>
-                                        <chmod file="${jextract.executable}" perm="700"/>
-                                    </target>
+                                    <workingDirectory>${jextract.cache}</workingDirectory>
+                                    <executable>tar</executable>
+                                    <arguments>
+                                        <argument>xzpf</argument>
+                                        <argument>${jextract.archive}</argument>
+                                        <argument>--strip-components=1</argument>
+                                    </arguments>
                                 </configuration>
                             </execution>
                         </executions>
