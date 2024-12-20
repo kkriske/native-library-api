@@ -49,18 +49,6 @@
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>java-generated-sources</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${java.generatedSources}</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>generated-resources</id>
                         <phase>generate-sources</phase>
                         <goals>
@@ -122,6 +110,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <sourceRoot>${java.generatedSources}</sourceRoot>
                     <executable>${jextract.executable}</executable>
                     <arguments>
                         <argument>--include-dir</argument>
@@ -132,8 +121,35 @@
                         <argument>io.github.kkriske.library.ffi</argument>
                         <argument>--header-class-name</argument>
                         <argument>Library</argument>
+                        <!-- graal functions -->
+                        <argument>--include-function</argument>
+                        <argument>graal_create_isolate</argument>
+                        <argument>--include-function</argument>
+                        <argument>graal_tear_down_isolate</argument>
+                        <!-- *our* functions -->
+                        <argument>--include-function</argument>
+                        <argument>add</argument>
                         <argument>${out.library}/library.h</argument>
                     </arguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>test-native</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <phase>test</phase>
+                    </execution>
+                </executions>
+                <configuration combine.children="append">
+                    <buildArgs>
+                    </buildArgs>
+<!--                    <skip>true</skip>-->
+<!--                    <skipNativeTests>true</skipNativeTests>-->
                 </configuration>
             </plugin>
         </plugins>
