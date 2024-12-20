@@ -19,6 +19,7 @@ jobs:
           java-version: '23'
           distribution: 'graalvm-community'
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          cache: 'maven'
       - name: Setup Python
         id: setup_python
         uses: actions/setup-python@v5
