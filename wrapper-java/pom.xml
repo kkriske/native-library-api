@@ -199,7 +199,7 @@
             </properties>
         </profile>
         <profile>
-            <id>mac-aarch64</id>
+            <id>mac-x86_64</id>
             <activation>
                 <os>
                     <family>mac</family>
