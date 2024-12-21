@@ -19,5 +19,7 @@ match system():
         __libname = 'library.so'
     case 'Windows':
         __libname = 'library.dll'
+    case 'Darwin':
+        __libname = 'library.dylib'
 
 lib = cdll.LoadLibrary("../../../target/generated-sources/resources/io/github/kkriske/library/native/" + __libname)
