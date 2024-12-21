@@ -74,6 +74,7 @@
                         <include>io/github/kkriske/library/native/*.h</include>
                         <include>io/github/kkriske/library/native/*.dll</include>
                         <include>io/github/kkriske/library/native/*.so</include>
+                        <include>io/github/kkriske/library/native/*.dylib</include>
                         <include>io/github/kkriske/library/native/*.size</include>
                         <include>io/github/kkriske/library/native/*.sha256</include>
                     </includes>
