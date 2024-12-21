@@ -134,6 +134,18 @@
             </properties>
         </profile>
         <profile>
+            <id>mac-x86_64</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                    <arch>x86_64</arch>
+                </os>
+            </activation>
+            <properties>
+                <venv.bin>${venv.dir}/bin</venv.bin>
+            </properties>
+        </profile>
+        <profile>
             <id>prepare-venv</id>
             <activation>
                 <!--

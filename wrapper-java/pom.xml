@@ -199,6 +199,20 @@
             </properties>
         </profile>
         <profile>
+            <id>mac-aarch64</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                    <arch>x86_64</arch>
+                </os>
+            </activation>
+            <properties>
+                <jextract.archive>${project.basedir}/jextract/openjdk-22-jextract+6-47_macos-x86_bin.tar.gz</jextract.archive>
+                <jextract.cache>${jextract.cache.basedir}/openjdk-22-jextract+6-47_macos-x86_bin</jextract.cache>
+                <jextract.executable>${jextract.cache}/bin/jextract</jextract.executable>
+            </properties>
+        </profile>
+        <profile>
             <id>unpack-jextract</id>
             <!--
             This is not fully functional.
