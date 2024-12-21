@@ -22,6 +22,7 @@ public class LibraryMetadata {
         LIB_EXT = switch (OS.CURRENT) {
             case WINDOWS -> ".dll";
             case LINUX -> ".so";
+            case MACOS -> ".dylib";
         };
 
         try (InputStream hashIs = Loader.class.getResourceAsStream(RESOURCES + LIB_NAME + HASH_EXT);
