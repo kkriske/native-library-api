@@ -207,8 +207,8 @@
                 </os>
             </activation>
             <properties>
-                <jextract.archive>${project.basedir}/jextract/openjdk-22-jextract+6-47_macos-x86_bin.tar.gz</jextract.archive>
-                <jextract.cache>${jextract.cache.basedir}/openjdk-22-jextract+6-47_macos-x86_bin</jextract.cache>
+                <jextract.archive>${project.basedir}/jextract/openjdk-22-jextract+6-47_macos-x64_bin.tar.gz</jextract.archive>
+                <jextract.cache>${jextract.cache.basedir}/openjdk-22-jextract+6-47_macos-x64_bin</jextract.cache>
                 <jextract.executable>${jextract.cache}/bin/jextract</jextract.executable>
             </properties>
         </profile>
