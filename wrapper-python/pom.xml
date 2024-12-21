@@ -98,10 +98,11 @@
 
     <profiles>
         <profile>
-            <id>windows</id>
+            <id>windows-x86_64</id>
             <activation>
                 <os>
                     <family>windows</family>
+                    <arch>amd64</arch>
                 </os>
             </activation>
             <properties>
@@ -109,10 +110,23 @@
             </properties>
         </profile>
         <profile>
-            <id>unix</id>
+            <id>unix-x86_64</id>
             <activation>
                 <os>
                     <family>unix</family>
+                    <arch>amd64</arch>
+                </os>
+            </activation>
+            <properties>
+                <venv.bin>${venv.dir}/bin</venv.bin>
+            </properties>
+        </profile>
+        <profile>
+            <id>mac-aarch64</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                    <arch>aarch64</arch>
                 </os>
             </activation>
             <properties>

@@ -157,10 +157,11 @@
 
     <profiles>
         <profile>
-            <id>windows</id>
+            <id>windows-x86_64</id>
             <activation>
                 <os>
                     <family>windows</family>
+                    <arch>amd64</arch>
                 </os>
             </activation>
             <properties>
@@ -170,15 +171,30 @@
             </properties>
         </profile>
         <profile>
-            <id>unix</id>
+            <id>unix-x86_64</id>
             <activation>
                 <os>
                     <family>unix</family>
+                    <arch>amd64</arch>
                 </os>
             </activation>
             <properties>
                 <jextract.archive>${project.basedir}/jextract/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz</jextract.archive>
                 <jextract.cache>${jextract.cache.basedir}/openjdk-22-jextract+6-47_linux-x64_bin</jextract.cache>
+                <jextract.executable>${jextract.cache}/bin/jextract</jextract.executable>
+            </properties>
+        </profile>
+        <profile>
+            <id>mac-aarch64</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                    <arch>aarch64</arch>
+                </os>
+            </activation>
+            <properties>
+                <jextract.archive>${project.basedir}/jextract/openjdk-22-jextract+6-47_macos-aarch64_bin.tar.gz</jextract.archive>
+                <jextract.cache>${jextract.cache.basedir}/openjdk-22-jextract+6-47_macos-aarch64_bin</jextract.cache>
                 <jextract.executable>${jextract.cache}/bin/jextract</jextract.executable>
             </properties>
         </profile>
